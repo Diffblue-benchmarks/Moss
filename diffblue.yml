@@ -1,0 +1,334 @@
+buildCmd: mvn -e -X -Dmaven.test.skip=true compile
+testCmd: true
+lineLength: 4096
+skipVerification: true
+cbmcArguments:
+  # Do not generate coverage comments on generated tests.
+  java-generate-no-comments: true
+phases:
+  -
+  #Phase 0 PRETTY AND SIMPLE - Simple models, quick cover, pretty Tests, Do Not Test Private Method Directly
+    timeout: 180
+    cbmcArguments:
+      # Use simple models containers (ArrayList, HashMap, HashSet,...) will have a maximum size of one.
+      classpath: '/tools/cbmc/models-simple-overlay.jar:/tools/cbmc/models.jar:.'
+      # Set a limit on the number of instructions that can be generated as part of a test trace.
+      depth: 1500
+      # never initialize reference-typed parameter to the entry point with null
+      java-assume-inputs-non-null: true
+      # Constrain the size of arrays created in the analyzed code.
+      java-max-vla-length: 10000
+      # Maximum allowed length for an array passed as test input.
+      max-nondet-array-length: 10
+      # Bound the length of input strings.
+      max-nondet-string-length: 10
+      # Add constraint that strings are printable
+      string-printable: true
+      # Make implicit runtime exceptions explicit.
+      throw-runtime-exceptions: false
+      # Set an upper bound on loop unwinding.
+      unwind: 1
+      # Do not test any methods that have the specified access level.
+      do-not-test-methods-with-access: [ private ]
+      # Instrument the entry point function only.
+      cover-function-only: false
+      # Instrument the file as opposed to the function only
+      cover-only: file
+      # Set string input value  
+      string-input-value: ["foo", "Bar", "BAZ", "1234", "a,b,c", "1", "2", "3", "a/b/c", "a'b'c"]
+  -
+  #Phase 1 PRETTY AND COMPLEX - Standard models, longer run time, pretty tests, Do Not Test Private Method Directly
+    timeout: 180
+    cbmcArguments:
+      # Use the standard models library
+      classpath: '/tools/cbmc/models.jar:.'
+      # Set a limit on the number of instructions that can be generated as part of a test trace.
+      depth: false
+      # never initialize reference-typed parameter to the entry point with null
+      java-assume-inputs-non-null: false
+      # Constrain the size of arrays created in the analyzed code.
+      java-max-vla-length: 10000
+      # Maximum allowed length for an array passed as test input.
+      max-nondet-array-length: 10
+      # Bound the length of input strings.
+      max-nondet-string-length: 10
+      # Add constraint that strings are printable
+      string-printable: true
+      # Set string input value  
+      string-input-value: ["foo", "Bar", "BAZ", "1234", "a,b,c", "1", "2", "3", "a/b/c", "a'b'c"]
+      # Make implicit runtime exceptions explicit.
+      throw-runtime-exceptions: false
+      # Set an upper bound on loop unwinding.
+      unwind: 2
+      # Do not test any methods that have the specified access level.
+      do-not-test-methods-with-access: [ private ]
+      # Instrument the entry point function only.
+      cover-function-only: false
+      # instrument the file as opposed to the function only
+      cover-only: file
+  -
+  #Phase 2 Simple and Private Directly
+    timeout: 180
+    cbmcArguments:
+      # Use simple models containers (ArrayList, HashMap, HashSet,...) will have a maximum size of one.
+      classpath: '/tools/cbmc/models-simple-overlay.jar:/tools/cbmc/models.jar:.'
+      # Set a limit on the number of instructions that can be generated as part of a test trace.
+      depth: 1500
+      # never initialize reference-typed parameter to the entry point with null
+      java-assume-inputs-non-null: true
+      # Constrain the size of arrays created in the analyzed code.
+      java-max-vla-length: 10000
+      # Maximum allowed length for an array passed as test input.
+      max-nondet-array-length: 10
+      # Bound the length of input strings.
+      max-nondet-string-length: 10
+      # Add constraint that strings are printable
+      string-printable: true
+      # Make implicit runtime exceptions explicit.
+      throw-runtime-exceptions: false
+      # Set an upper bound on loop unwinding.
+      unwind: 1
+      # Set string input value  
+      string-input-value: ["foo", "Bar", "BAZ", "1234", "a,b,c", "1", "2", "3", "a/b/c", "a'b'c"]
+      # If the logs contain output of the following then proceed to phase X
+    nextPhase:
+      # If the function is not analysable then do not pass onto the next phase
+      not_analyzed: null
+  -
+  #Phase 3 Complex and Private Directly
+    timeout: 180
+    cbmcArguments:
+      # Use the standard models library.
+      classpath: '/tools/cbmc/models.jar:.'
+      # Set a limit on the number of instructions that can be generated as part of a test trace.
+      depth: 3000
+      # Constrain the size of arrays created in the analyzed code.
+      java-max-vla-length: 10000
+      # Maximum allowed length for an array passed as test input.
+      max-nondet-array-length: 30
+      # Bound the length of input strings.
+      max-nondet-string-length: 30
+      # Make implicit runtime exceptions explicit.
+      throw-runtime-exceptions: false
+      # Set an upper bound on loop unwinding.
+      unwind: 3
+      # Set string input value  
+      string-input-value: ["foo", "Bar", "BAZ", "1234", "a,b,c", "1", "2", "3", "a/b/c", "a'b'c"]
+  -
+  #Phase 4 EXCEPTIONS
+    timeout: 180
+    cbmcArguments:
+      # Use the standard models library.
+      classpath: '/tools/cbmc/models.jar:.'
+      # Set a limit on the number of instructions that can be generated as part of a test trace.
+      depth: false
+      # Constrain the size of arrays created in the analyzed code.
+      java-max-vla-length: 10000
+      # Maximum allowed length for an array passed as test input.
+      max-nondet-array-length: 30
+      # Bound the length of input strings.
+      max-nondet-string-length: 30
+      # Add constraint that strings are printable
+      string-printable: false
+      # Make implicit runtime exceptions explicit.
+      throw-runtime-exceptions: true
+      # Set an upper bound on loop unwinding.
+  -
+    #PHASE 5 Big numbers and less contraints on inputs 
+    timeout: 300
+    cbmcArguments:
+      # Use the standard models library.
+      classpath: '/tools/cbmc/models.jar:.'
+      # Set a limit on the number of instructions that can be generated as part of a test trace.
+      depth: false
+      # never initialize reference-typed parameter to the entry point with null
+      java-assume-inputs-non-null: false
+      # Constrain the size of arrays created in the analyzed code.
+      java-max-vla-length: 10000
+      # Maximum allowed length for an array passed as test input.
+      max-nondet-array-length: 100
+      # Bound the length of input strings.
+      max-nondet-string-length: 100
+      # Add constraint that strings are printable
+      string-printable: false
+      # Make implicit runtime exceptions explicit.
+      throw-runtime-exceptions: false
+      # Set an upper bound on loop unwinding.
+      unwind: 6
+units:
+#Target TGF: 283.5
+# - methods: 23
+# - complexity: 561
+# - construction: 4.0
+# - dependency: 2.5
+  - target:
+    - dir: moss-service-api/target/classes
+      file: org/xujin/moss/vo/MenuVO.class
+      sourceDir: moss-service-api/src/main/java
+      sourceFile: org/xujin/moss/vo/MenuVO.java
+#Target TGF: 292.85
+# - methods: 33
+# - complexity: 749
+# - construction: 8.53333333333
+# - dependency: 8.91666666667
+  - target:
+    - dir: moss-core/target/classes
+      file: de/codecentric/boot/admin/server/domain/entities/Instance.class
+      sourceDir: moss-core/src/main/java
+      sourceFile: de/codecentric/boot/admin/server/domain/entities/Instance.java
+#Target TGF: 206.033333333
+# - methods: 17
+# - complexity: 427
+# - construction: 5.2
+# - dependency: 6.0
+  - target:
+    - dir: moss-core/target/classes
+      file: de/codecentric/boot/admin/server/domain/values/Registration.class
+      sourceDir: moss-core/src/main/java
+      sourceFile: de/codecentric/boot/admin/server/domain/values/Registration.java
+#Target TGF: 186.0
+# - methods: 17
+# - complexity: 376
+# - construction: 5.0
+# - dependency: 2.75
+  - target:
+    - dir: moss-core/target/classes
+      file: de/codecentric/boot/admin/server/config/AdminServerProperties$MonitorProperties.class
+      sourceDir: moss-core/src/main/java
+      sourceFile: de/codecentric/boot/admin/server/config/AdminServerProperties.java
+#Target TGF: 428.2
+# - methods: 36
+# - complexity: 906
+# - construction: 7.06666666667
+# - dependency: 5.5
+  - target:
+    - dir: moss-extension/target/classes
+      file: org/xujin/moss/model/MossInstance.class
+      sourceDir: moss-extension/src/main/java
+      sourceFile: org/xujin/moss/model/MossInstance.java
+#Target TGF: 452.166666667
+# - methods: 35
+# - complexity: 905
+# - construction: 5.33333333333
+# - dependency: 3.5
+  - target:
+    - dir: moss-service-api/target/classes
+      file: org/xujin/moss/vo/SubMenuVO.class
+      sourceDir: moss-service-api/src/main/java
+      sourceFile: org/xujin/moss/vo/SubMenuVO.java
+#Target TGF: 173.5
+# - methods: 17
+# - complexity: 339
+# - construction: 6.0
+# - dependency: 4.0
+  - target:
+    - dir: moss-service-api/target/classes
+      file: org/xujin/moss/request/AppPageRequest.class
+      sourceDir: moss-service-api/src/main/java
+      sourceFile: org/xujin/moss/request/AppPageRequest.java
+#Target TGF: 200.0
+# - methods: 23
+# - complexity: 372
+# - construction: 11.0
+# - dependency: 9.0
+  - target:
+    - dir: moss-service-api/target/classes
+      file: org/xujin/moss/vo/BasicDashboardVO.class
+      sourceDir: moss-service-api/src/main/java
+      sourceFile: org/xujin/moss/vo/BasicDashboardVO.java
+#Target TGF: 368.5
+# - methods: 32
+# - complexity: 724
+# - construction: 9.0
+# - dependency: 6.75
+  - target:
+    - dir: moss-extension/target/classes
+      file: org/xujin/moss/model/MossApplication.class
+      sourceDir: moss-extension/src/main/java
+      sourceFile: org/xujin/moss/model/MossApplication.java
+#Target TGF: 255.5
+# - methods: 21
+# - complexity: 505
+# - construction: 4.0
+# - dependency: 2.5
+  - target:
+    - dir: moss-service-api/target/classes
+      file: org/xujin/moss/model/MenuModel.class
+      sourceDir: moss-service-api/src/main/java
+      sourceFile: org/xujin/moss/model/MenuModel.java
+dependenciesOnClasspath:
+-
+  source: classes
+  classFile: org/xujin/moss/vo/SubMenuVO$SubMenuVOBuilder.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/events/InstanceInfoChangedEvent.class
+-
+  source: classes
+  classFile: org/xujin/moss/vo/SubMenuVO.class
+-
+  source: classes
+  classFile: org/xujin/moss/model/MossInstance.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/values/InstanceId.class
+-
+  source: classes
+  classFile: org/xujin/moss/vo/BasicDashboardVO.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/events/InstanceEndpointsDetectedEvent.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/config/AdminServerProperties$MonitorProperties.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/values/Tags.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/events/InstanceDeregisteredEvent.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/events/InstanceStatusChangedEvent.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/events/InstanceRegistrationUpdatedEvent.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/values/StatusInfo.class
+-
+  source: classes
+  classFile: org/xujin/moss/request/AppPageRequest.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/events/InstanceEvent.class
+-
+  source: classes
+  classFile: org/xujin/moss/base/BaseModel.class
+-
+  source: classes
+  classFile: org/xujin/moss/vo/MenuVO.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/values/Registration$Builder.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/entities/Instance.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/values/Endpoints.class
+-
+  source: classes
+  classFile: org/xujin/moss/model/MossApplication.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/values/Registration.class
+-
+  source: classes
+  classFile: org/xujin/moss/model/MenuModel.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/values/Info.class
+-
+  source: classes
+  classFile: de/codecentric/boot/admin/server/domain/events/InstanceRegisteredEvent.class
