@@ -175,8 +175,12 @@ phases:
       # instrument the file as opposed to the function only
       cover-only: file
 units:
- - target:
-   - dir: moss-client/moss-client-common/target/classes
-     file: org/xujin/moss/client/endpoint/dependency/util/PomUtil.class
-     sourceDir: moss-client/moss-client-common/src/main/java
-     sourceFile: org/xujin/moss/client/endpoint/dependency/util/PomUtil.java
+  - target:
+    - dir: moss-client/moss-client-common/target/classes
+    file: org/xujin/moss/client/endpoint/dependency/util/PomUtil.class
+    sourceDir: moss-client/moss-client-common/src/main/java
+    sourceFile: org/xujin/moss/client/endpoint/dependency/util/PomUtil.java
+    - dir: moss-core/target/classes
+    file: de/codecentric/boot/admin/server/web/PathUtils.class
+    sourceDir: moss-core/src/main/java
+    sourceFile: de/codecentric/boot/admin/server/web/PathUtils.java
