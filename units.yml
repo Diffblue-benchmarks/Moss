@@ -1,0 +1,11 @@
+units:
+ - target:
+   - dir: moss-core/target/classes
+     file: de/codecentric/boot/admin/server/web/PathUtils.class
+     sourceDir: moss-core/src/main/java
+     sourceFile: de/codecentric/boot/admin/server/web/PathUtils.java
+ - target:
+   - dir: moss-client/moss-client-common/target/classes
+     file: org/xujin/moss/client/endpoint/dependency/util/PomUtil.class
+     sourceDir: moss-client/moss-client-common/src/main/java
+     sourceFile: org/xujin/moss/client/endpoint/dependency/util/PomUtil.java

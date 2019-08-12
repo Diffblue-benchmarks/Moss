@@ -146,34 +146,7 @@ phases:
     nextPhase:
       # If the function is not analysable then do not pass onto the next phase
       not_analyzed: null
-  -
-    # PHASE 5 Mocking - aggressive mocking, do not test private methods directly
-    timeout: 180
-    cbmcArguments:
-      # Use simple models containers first (ArrayList, HashMap, HashSet,...) will have a maximum size of one.
-      classpath: '/tools/cbmc/models-simple-overlay.jar:/tools/cbmc/models.jar:.'
-      # Set a limit on the number of instructions that can be generated as part of a test trace.
-      depth: 3000
-      # never initialize reference-typed parameter to the entry point with null
-      java-assume-inputs-non-null: true
-      # Only load the class (and related inner/outer classes) containing the method under test,
-      load-containing-class-only: true
-      # Maximum allowed length for an array passed as test input.
-      max-nondet-array-length: 30
-      # Bound the length of input strings.
-      max-nondet-string-length: 100
-      # Add constraint that strings are printable
-      string-printable: false
-      # Make implicit runtime exceptions explicit.
-      throw-runtime-exceptions: true
-      # Set an upper bound on loop unwinding.
-      unwind: 3
-      # Do not test any methods that have the specified access level.
-      do-not-test-methods-with-access: [private]
-      # Instrument the entry point function only.
-      cover-function-only: false
-      # instrument the file as opposed to the function only
-      cover-only: file
+
 units:
   - target:
       - dir: moss-core/target/classes
