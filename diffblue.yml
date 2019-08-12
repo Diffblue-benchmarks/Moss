@@ -146,7 +146,6 @@ phases:
     nextPhase:
       # If the function is not analysable then do not pass onto the next phase
       not_analyzed: null
-
 units:
   - target:
       - dir: moss-core/target/classes
