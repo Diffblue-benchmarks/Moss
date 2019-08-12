@@ -143,9 +143,6 @@ phases:
       # Set string input value
       string-input-value: ["foo", "Bar", "BAZ", "1234", "1a 2b 3c", "A1B2C3", "a,b,c", "1", "2", "3", "a/b/c", "a'b'c", ",", "/", "'"]
       # If the logs contain output of the following then proceed to phase X
-    nextPhase:
-      # If the function is not analysable then do not pass onto the next phase
-      not_analyzed: null
 units:
   - target:
       - dir: moss-core/target/classes
